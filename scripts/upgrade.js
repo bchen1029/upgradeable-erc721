@@ -6,13 +6,19 @@
 // global scope, and execute the script.
 const { ethers, upgrades } = require("hardhat");
 
+const PROXY_ADDRESS = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0';
+
 async function main() {
-    const proxyAddress = '0xC3D4b996eE83DCd8c6aB0a9833636938dDE39bE2';
+    const currentImplAddress = await upgrades.erc1967.getImplementationAddress(PROXY_ADDRESS);
+    console.log('currentImplAddress', currentImplAddress)
+  
  
     const NFTV2 = await ethers.getContractFactory("AppWorksNFTV2");
     console.log("Preparing upgrade...");
-    const nftV2Address = await upgrades.prepareUpgrade(proxyAddress, NFTV2);
-    console.log("NFTV2 at:", nftV2Address);
+    await upgrades.upgradeProxy(PROXY_ADDRESS, NFTV2);
+
+    const upgradeImplAddress = await upgrades.erc1967.getImplementationAddress(PROXY_ADDRESS);
+    console.log('upgradeImplAddress', upgradeImplAddress)
 }
 
 // We recommend this pattern to be able to use async/await everywhere

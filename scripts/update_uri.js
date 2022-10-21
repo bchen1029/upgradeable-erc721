@@ -7,15 +7,13 @@
 
 const { ethers } = require("hardhat");
 
-const PROXY_ADDRESS = '0xC3D4b996eE83DCd8c6aB0a9833636938dDE39bE2'
+const PROXY_ADDRESS = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0'
 
 async function main() {
   const NFTV2 = await ethers.getContractFactory("AppWorksNFTV2");
-  const nftV2 = NFTV2.attach(PROXY_ADDRESS);
+  const nftV2 = await NFTV2.attach(PROXY_ADDRESS);
 
-  // upgrade 前會報錯因為 v1 版本還沒有實作這個 function
-  const tx = await nftV2.setNotRevealedURI("https://test")
-  console.log(tx)
+  await nftV2.setNotRevealedURI("test url")
 }
 
 // We recommend this pattern to be able to use async/await everywhere
